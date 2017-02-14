@@ -44,6 +44,27 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
 
+
+  def upcoming_events
+    self.attended_events.upcoming
+  end
+
+  def previous_events
+    self.attended_events.past
+  end
+
+  def attending?(event)
+    event.attendees.include?(self)
+  end
+
+  def attend!(event)
+    self.invitations.create!(attended_event_id: event.id)
+  end
+
+  def cancel!(event)
+    self.invites.find_by(attended_event_id: event.id).destroy
+  end
+
   private
 
     #converts email to all lower-case
