@@ -10,6 +10,9 @@ class User < ApplicationRecord
                     uniqueness: { case_senstiive: false }
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  has_many :events, :foreign_key => "creator_id", dependent: :destroy
+  has_many :invitations, :foreign_key => :attendee_id
+  has_many :attended_events, :through => :invitations
 
   #Return the hash digest of the given string
 
